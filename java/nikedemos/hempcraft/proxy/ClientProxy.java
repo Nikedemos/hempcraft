@@ -21,7 +21,6 @@ public class ClientProxy extends CommonProxy {
 		registerItemModel(ModItems.HEMP_STEM);
 		registerItemModel(ModItems.HEMP_LEAF);
 		registerItemModel(ModItems.HEMP_BUD_FRESH);
-		registerItemModel(ModItems.HEMP_BUD_DRY);
 		
 		
 		registerItemModel(Item.getItemFromBlock(ModBlocks.HEMP_STALK));

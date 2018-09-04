@@ -14,6 +14,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import nikedemos.hempcraft.Main;
 import nikedemos.hempcraft.items.ItemBase;
 import nikedemos.hempcraft.items.ItemBaseSeeds;
+import nikedemos.hempcraft.items.ItemBlockBase;
 import nikedemos.hempcraft.items.ItemBud;
 import nikedemos.hempcraft.util.HempCraftConfig;
 
@@ -25,7 +26,6 @@ public final class ModItems {
 	public static final Item HEMP_STEM = addItem(new ItemBase(),"hemp_stem");
 	public static final Item HEMP_LEAF = addItem(new ItemBase(),"hemp_leaf");
 	public static final Item HEMP_BUD_FRESH = addItem(new ItemBud(),"hemp_bud_fresh");
-	public static final Item HEMP_BUD_DRY = addItem(new ItemBud(),"hemp_bud_dry");
 	
 	
 	private static Item addItem(Item item, String name) { 
@@ -40,7 +40,7 @@ public final class ModItems {
 		registry.register(HEMP_STEM);
 		registry.register(HEMP_LEAF);
 		registry.register(HEMP_BUD_FRESH);
-		registry.register(HEMP_BUD_DRY);
+
 
 		registry.register(new ItemBlock(ModBlocks.HEMP_STALK).setRegistryName( ModBlocks.HEMP_STALK.getRegistryName()));
 		registry.register(new ItemBlock(ModBlocks.HEMP_PLOT).setRegistryName( ModBlocks.HEMP_PLOT.getRegistryName()));

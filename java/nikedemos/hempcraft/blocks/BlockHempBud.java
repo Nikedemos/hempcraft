@@ -59,14 +59,22 @@ public class BlockHempBud extends Block {
     
     public static boolean check_your_staying_privilege(World worldIn, BlockPos pos)
     {
-    	boolean do_break=false;
+    	boolean can_stay=true;
     	
     	IBlockState state = worldIn.getBlockState(pos);
     	
     	for (BlockPos.MutableBlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(pos.add(-1, -1, -1), pos.add(1, 1, 1)))
         {
-        //if it's you, don't bother
-    		if (blockpos$mutableblockpos.equals(pos) == false)
+        //if it's you, don't bother. also only check blocks neighboring sides (von neumann's neighbourhood)
+    		if (blockpos$mutableblockpos.equals(pos) == false &&
+    				(
+    				blockpos$mutableblockpos.equals(pos.up()) ||
+    				blockpos$mutableblockpos.equals(pos.down()) ||
+    				blockpos$mutableblockpos.equals(pos.east()) ||
+    				blockpos$mutableblockpos.equals(pos.west()) ||
+    				blockpos$mutableblockpos.equals(pos.south()) ||
+    				blockpos$mutableblockpos.equals(pos.north())
+    				))
     		{
     		IBlockState statey = worldIn.getBlockState(blockpos$mutableblockpos);
     		Block blockey = statey.getBlock();
@@ -74,23 +82,23 @@ public class BlockHempBud extends Block {
     			if(blockpos$mutableblockpos.equals(pos.up())) //check the neighbor on top, has to be solid
     			{
 
-    				if (statey.getMaterial().isSolid())
+    				if (!statey.getMaterial().isSolid())
     				{
-    				do_break=true; break;
+    				can_stay=false; break;
     				}
     			
     			}
     			else //check any other neighbor blocks, have to be either non-solid or hemp bud
     			{
-    			if (statey.getBlock()==ModBlocks.HEMP_BUD || !statey.getMaterial().isSolid())
+    			if (!(statey.getBlock()==ModBlocks.HEMP_BUD || !statey.getMaterial().isSolid()))
     				{
-    				do_break=true; break;				
+    				can_stay=false; break;				
     				}
     			}
     		}
         }
     	
-    	return do_break;
+    	return can_stay;
     }
     
     @Override
