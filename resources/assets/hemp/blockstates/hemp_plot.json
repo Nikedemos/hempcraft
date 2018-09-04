@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "moisture=0": { "model": "hemp:hemp_plot_moisture_0" },
+        "moisture=1": { "model": "hemp:hemp_plot_moisture_1" },
+        "moisture=2": { "model": "hemp:hemp_plot_moisture_2" },
+        "moisture=3": { "model": "hemp:hemp_plot_moisture_3" },
+        "moisture=4": { "model": "hemp:hemp_plot_moisture_4" },
+        "moisture=5": { "model": "hemp:hemp_plot_moisture_5" },
+        "moisture=6": { "model": "hemp:hemp_plot_moisture_6" },
+        "moisture=7": { "model": "hemp:hemp_plot_moisture_7" }
+    }
+}

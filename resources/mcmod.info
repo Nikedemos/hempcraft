@@ -1,0 +1,18 @@
+[
+{
+  "modid": "hemp",
+  "name": "HempCraft",
+  "description": "Because it must be 4:20 somewhere!",
+
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Nikedemos"],
+
+  "credits": "Moderately inspired by Cleverpanda714's mod SimpleCorn, your code was huge help!",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

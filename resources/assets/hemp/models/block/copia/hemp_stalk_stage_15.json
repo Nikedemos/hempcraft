@@ -1,0 +1,6 @@
+{
+   "parent": "block/tinted_cross",
+   "textures": {
+       "cross": "hemp:blocks/hemp_stalk_stage_15"
+   }
+}

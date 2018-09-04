@@ -1,0 +1,6 @@
+{
+   "parent": "hemp:block/tinted_cross_big",
+   "textures": {
+       "cross": "hemp:blocks/female_flower_stage_1"
+   }
+}

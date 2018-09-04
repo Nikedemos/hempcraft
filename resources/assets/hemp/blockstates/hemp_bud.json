@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "dry=0":  { "model": "hemp:hemp_bud_block_fresh" },
+        "dry=1":  { "model": "hemp:hemp_bud_block_dry" }
+        }
+}

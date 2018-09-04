@@ -1,0 +1,20 @@
+{
+    "variants": {
+        "age=0":  { "model": "hemp:hemp_flower_female_stage_0" },
+        "age=1":  { "model": "hemp:hemp_flower_female_stage_1" },
+        "age=2":  { "model": "hemp:hemp_flower_female_stage_2" },
+        "age=3":  { "model": "hemp:hemp_flower_female_stage_3" },
+        "age=4":  { "model": "hemp:hemp_flower_female_stage_4" },
+        "age=5":  { "model": "hemp:hemp_flower_female_stage_5" },
+        "age=6":  { "model": "hemp:hemp_flower_female_stage_6" },
+        "age=7":  { "model": "hemp:hemp_flower_female_stage_7" },
+        "age=8":  { "model": "hemp:hemp_flower_female_stage_8" },
+        "age=9":  { "model": "hemp:hemp_flower_female_stage_8" },
+        "age=10": { "model": "hemp:hemp_flower_female_stage_10" },
+        "age=11": { "model": "hemp:hemp_flower_female_stage_11" },
+        "age=12": { "model": "hemp:hemp_flower_female_stage_12" },
+        "age=13": { "model": "hemp:hemp_flower_female_stage_13" },
+        "age=14": { "model": "hemp:hemp_flower_female_stage_14" },
+        "age=15": { "model": "hemp:hemp_flower_female_stage_15" }
+    }
+}
