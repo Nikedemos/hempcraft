@@ -4,6 +4,7 @@ package nikedemos.hempcraft.util;
 import java.util.Random;
 
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class HempCraftVaria {
 	public static double get_distance(BlockPos pos1, BlockPos pos2) {
@@ -27,4 +28,5 @@ public class HempCraftVaria {
 		
 		return result;
 	}
+
 }
