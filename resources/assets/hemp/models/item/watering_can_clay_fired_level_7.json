@@ -1,0 +1,7 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "hemp:items/watering_can_clay_fired",
+        "layer1": "hemp:items/watering_can_level_7"
+    }
+}

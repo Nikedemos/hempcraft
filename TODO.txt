@@ -1,0 +1,39 @@
+From most to least pressing:
+
+- add tile entity functionality to hemp plot
+- add IHempGenetics interface, which will be used by hemp plots (as tile entity meta)
+  and seeds (as NBT). Also translating between the two.
+- add WateringCan functionality
+
+- new Class Genotype
+- new Class Gene
+- new Class Chromosome
+- new Class Pair
+- new Class GeneInteractionTable
+  
+IHempGenetics interface
+- boolean gender
+- String id (randomly generated)
+- Genome genome:
+
+Each gene is a byte, encoded in nucleotide base 4. (A = 0, C = 1, G = 2, T = 3)
+A genotype contains two copies of a gene, one from mother,
+and one from the father. So we deal with chromosome pairs.
+
+To take the value of a gene, modulo it by 2, and cast it to boolean.
+To see which value will be the chosen value in the end, take the sum of the
+squares of the un-moduled values and modulo by 4. The resulting int will tell us if:
+- the first gene is dominant, the second gene is recessive
+- the second gene is dominant, the first gene is recessive
+- the genes are co-dominant (average of the two, rounded, is taken)
+- the genes are clashing, causing a defect - value 0 - to be encoded in the 
+
+
+
+- vegetative growth speed (4 genes, NUTID)
+- female flowering speed (2 genes, mNUTID) 
+
+tolerances:
+ - temperature A and temperature B (the smaller one will define minimum, the bigger one - maximum)
+
+
