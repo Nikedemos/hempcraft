@@ -36,13 +36,11 @@ import net.minecraftforge.client.model.obj.OBJModel.Material;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nikedemos.hempcraft.Main;
-import nikedemos.hempcraft.blocks.BlockHempPlot;
-import nikedemos.hempcraft.init.ModBlocks;
 
 
-public class ItemWateringCan extends ItemBase {
+public class ItemWateringCanBACKUP extends ItemBase {
 	public Block containedBlock = Blocks.AIR;
-	public ItemWateringCan() {
+	public ItemWateringCanBACKUP() {
 		super();
 		this.setMaxDamage(64);//later, take it from the constructor's TIER argument.
 		setCreativeTab(Main.HEMP_TAB);
@@ -59,6 +57,28 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
 		 */
 	
 	}
+	@Override
+    public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
+    {
+    System.out.print("YES");
+		//give it some default nbt
+	NBTTagCompound taggy = new NBTTagCompound();
+	taggy.setInteger("water_level", 8);
+    stack.setTagCompound(taggy);
+    }
+	
+	@Override
+    @SideOnly(Side.CLIENT)
+    public ItemStack getDefaultInstance()
+    {
+        ItemStack stack = new ItemStack(this);
+    	NBTTagCompound taggy = new NBTTagCompound();
+    	taggy.setInteger("water_level", 8);
+        stack.setTagCompound(taggy);
+        
+		return stack;
+    }
+	
 	public int max_water_level=16; //2 water blocks
 	
     @SuppressWarnings("null")
@@ -85,7 +105,7 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
         ModelLoader.setCustomMeshDefinition(this, new ItemMeshDefinition() {
         	@Override
             public ModelResourceLocation getModelLocation(ItemStack stack) {
-        		return water_level_model[get_water_level_model(stack)];
+        		return water_level_model[get_water_level(stack)];
             }
         });
     }
@@ -100,7 +120,7 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
         }
     
     
-    public int get_water_level_model(ItemStack stack)
+    public int get_water_level(ItemStack stack)
     {
     int rettie=0;
     NBTTagCompound taggy=getTagCompoundSafe(stack);
@@ -113,20 +133,6 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
     else return rettie;
     }
     
-    public int get_water_level(ItemStack stack)
-    {
-    int rettie=0;
-    NBTTagCompound taggy=getTagCompoundSafe(stack);
-    
-    //check if it has a tag, if not, you're the default level - 0
-    if (!taggy.hasNoTags() && taggy.hasKey("water_level"))
-    {
-    	return taggy.getInteger("water_level");
-    }
-    else return rettie;
-    }
-
-
     public void set_water_level(ItemStack stack, int level)
     {
     getTagCompoundSafe(stack).setInteger("water_level", level);
@@ -134,29 +140,19 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
     
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
-        /*
-        The general algorithm
-        
-        Once you right-click, we have two possibilities.
-        We're gonna do a raytrace result...
-                RayTraceResult raytraceresult = this.rayTrace(worldIn, playerIn, true);
-        if we encounter water, we check if the watering can is full.
-        If it's not full, we remove the raytraced block, replacing it with air, and we add 8 (or however smaller number to max out)
-        Then, water_level++ to NBT. If it's full, we do nothing.
-        
-        If we encounter a hemp plot, we transfer 1 water_level to hemp_plot's moisture.
-        Then, we take 1 water_level and damage the held item by 1.
-        */
-    	
+        boolean flag = this.containedBlock == Blocks.AIR;
         ItemStack itemstack = playerIn.getHeldItem(handIn);
-        RayTraceResult raytraceresult = this.rayTrace(worldIn, playerIn, true); //arg3=true: take liquids into account
-        if (raytraceresult == null) //nothing
+        RayTraceResult raytraceresult = this.rayTrace(worldIn, playerIn, flag);
+        ActionResult<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onBucketUse(playerIn, worldIn, itemstack, raytraceresult);
+        if (ret != null) return ret;
+
+        if (raytraceresult == null)
         {
-            return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
+            return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
         }
-        else if (raytraceresult.typeOfHit != RayTraceResult.Type.BLOCK) //entities
+        else if (raytraceresult.typeOfHit != RayTraceResult.Type.BLOCK)
         {
-            return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
+            return new ActionResult<ItemStack>(EnumActionResult.PASS, itemstack);
         }
         else
         {
@@ -166,7 +162,7 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
             {
                 return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
             }
-            else
+            else if (flag)
             {
                 if (!playerIn.canPlayerEdit(blockpos.offset(raytraceresult.sideHit), raytraceresult.sideHit, itemstack))
                 {
@@ -175,77 +171,77 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
                 else
                 {
                     IBlockState iblockstate = worldIn.getBlockState(blockpos);
-                    Block blokky = iblockstate.getBlock();
+                    net.minecraft.block.material.Material material = iblockstate.getMaterial();
 
-                    if (blokky == Blocks.WATER && this.get_water_level(itemstack)<this.max_water_level && ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0) //0 - only still water
+                    if (material == net.minecraft.block.material.Material.WATER && ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0)
                     {
                         worldIn.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 11);
-                        //playerIn.addStat(StatList.getObjectUseStats(this));
-
-                        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, this.fill_can(itemstack, playerIn, 8));
+                        playerIn.addStat(StatList.getObjectUseStats(this));
+                        playerIn.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
+                        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, this.fillBucket(itemstack, playerIn, Items.WATER_BUCKET));
                     }
-                    else if (blokky == ModBlocks.HEMP_PLOT && this.get_water_level(itemstack)>0 && ((Integer)iblockstate.getValue(BlockHempPlot.MOISTURE)).intValue() < 7) //you'll never overfill by accident using a watering can
+                    else if (material == net.minecraft.block.material.Material.LAVA && ((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0)
                     {
-                        int water_level = (Integer)iblockstate.getValue(BlockHempPlot.MOISTURE).intValue();
-                        worldIn.setBlockState(blockpos, blokky.getStateFromMeta(water_level + 1), 11);
-                        //playerIn.addStat(StatList.getObjectUseStats(this));
-                        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, this.drain_can(itemstack, playerIn, 1));
+                        playerIn.playSound(SoundEvents.ITEM_BUCKET_FILL_LAVA, 1.0F, 1.0F);
+                        worldIn.setBlockState(blockpos, Blocks.AIR.getDefaultState(), 11);
+                        playerIn.addStat(StatList.getObjectUseStats(this));
+                        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, this.fillBucket(itemstack, playerIn, Items.LAVA_BUCKET));
                     }
                     else
                     {
-                    	//but in the future, you might just use it to place water blocks
                         return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
                     }
+                }
+            }
+            else
+            {
+                boolean flag1 = worldIn.getBlockState(blockpos).getBlock().isReplaceable(worldIn, blockpos);
+                BlockPos blockpos1 = flag1 && raytraceresult.sideHit == EnumFacing.UP ? blockpos : blockpos.offset(raytraceresult.sideHit);
+
+                if (!playerIn.canPlayerEdit(blockpos1, raytraceresult.sideHit, itemstack))
+                {
+                    return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
+                }
+                else if (this.tryPlaceContainedLiquid(playerIn, worldIn, blockpos1))
+                {
+                    if (playerIn instanceof EntityPlayerMP)
+                    {
+                        CriteriaTriggers.PLACED_BLOCK.trigger((EntityPlayerMP)playerIn, blockpos1, itemstack);
+                    }
+
+                    playerIn.addStat(StatList.getObjectUseStats(this));
+                    return !playerIn.capabilities.isCreativeMode ? new ActionResult(EnumActionResult.SUCCESS, new ItemStack(Items.BUCKET)) : new ActionResult(EnumActionResult.SUCCESS, itemstack);
+                }
+                else
+                {
+                    return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
                 }
             }
         }
     }
     
-    private ItemStack fill_can(ItemStack canny, EntityPlayer player, int levels)
+    private ItemStack fillBucket(ItemStack emptyBuckets, EntityPlayer player, Item fullBucket)
     {
-        int cur_level = this.get_water_level(canny);
-        
         if (player.capabilities.isCreativeMode)
         {
-            if (cur_level<this.max_water_level)
-            	{
-            	this.set_water_level(canny, this.max_water_level);
-                player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-            	}
-        	return canny;
+            return emptyBuckets;
         }
         else
         {
-            if (cur_level<this.max_water_level)
+            emptyBuckets.shrink(1);
+
+            if (emptyBuckets.isEmpty())
             {
-                this.set_water_level(canny, Math.min(this.max_water_level, cur_level+levels));
-                player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-            }
-            return canny;
-        }
-    }
-    
-    private ItemStack drain_can(ItemStack canny, EntityPlayer player, int levels)
-    {
-        int cur_level = this.get_water_level(canny);
-                
-        if (player.capabilities.isCreativeMode) //don't use up any water on Creative
-        {
-            player.playSound(SoundEvents.ITEM_BUCKET_EMPTY, 1.0F, 1.0F);
-        	return canny;
-        }
-        else
-        {
-            if (cur_level>=levels && cur_level!=0)
-            {
-                this.set_water_level(canny, Math.max(0, cur_level-levels));
-                canny.damageItem(1, player);
-                player.playSound(SoundEvents.ITEM_BUCKET_EMPTY, 1.0F, 1.0F);
-            	return canny;
+                return new ItemStack(fullBucket);
             }
             else
             {
-                return canny;
+                if (!player.inventory.addItemStackToInventory(new ItemStack(fullBucket)))
+                {
+                    player.dropItem(new ItemStack(fullBucket), false);
+                }
+
+                return emptyBuckets;
             }
         }
     }
