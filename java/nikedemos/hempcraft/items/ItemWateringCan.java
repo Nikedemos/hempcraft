@@ -33,6 +33,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.functions.SetMetadata;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJModel.Material;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nikedemos.hempcraft.Main;
@@ -59,6 +60,7 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
 		 */
 	
 	}
+		
 	public int max_water_level=16; //2 water blocks
 	
     @SuppressWarnings("null")
