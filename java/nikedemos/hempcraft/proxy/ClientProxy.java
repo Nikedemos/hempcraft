@@ -25,6 +25,7 @@ public class ClientProxy extends CommonProxy {
 		registerItemModel(ModItems.HEMP_BUD_DRY);
 		
 		//this is how we register items dependant on NBT (or any other factors, like capabilities / stack number)
+		//remember, don't use the registerItemModel method for them!
         ((ItemWateringCan) ModItems.WATERING_CAN_CLAY_FIRED).initModel(); 
 		
         //blocks

@@ -31,7 +31,7 @@ public final class ModItems {
 	public static final Item HEMP_LEAF = addItem(new ItemBase(),"hemp_leaf");
 	public static final Item HEMP_BUD_FRESH = addItem(new ItemBud(),"hemp_bud_fresh");
 	public static final Item HEMP_BUD_DRY = addItem(new ItemBase(),"hemp_bud_dry");
-	public static final Item WATERING_CAN_CLAY_FIRED = addItem(new ItemWateringCan(),"watering_can_clay_fired");	
+	public static final Item WATERING_CAN_CLAY_FIRED = addItem(new ItemWateringCan(16, 0, 64),"watering_can_clay_fired");	
 	
 	
 	

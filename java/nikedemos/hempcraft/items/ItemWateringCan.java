@@ -43,9 +43,11 @@ import nikedemos.hempcraft.init.ModBlocks;
 
 public class ItemWateringCan extends ItemBase {
 	public Block containedBlock = Blocks.AIR;
-	public ItemWateringCan() {
+	public ItemWateringCan(int _max_water_level, int _max_range, int _max_damage) {
 		super();
-		this.setMaxDamage(64);//later, take it from the constructor's TIER argument.
+		this.max_water_level=_max_water_level; //2 water blocks capacity
+		this.max_range=_max_range;
+		this.setMaxDamage(_max_damage);//later, take it from the constructor's TIER argument.
 		setCreativeTab(Main.HEMP_TAB);
 		/*
 
@@ -61,11 +63,13 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
 	
 	}
 		
-	public int max_water_level=16; //2 water blocks
+	public int max_water_level; //2 water blocks capacity
+	public int max_range; //range 1: 3x3, range 2: 5x5
+	public int cur_range=0; //0 means we're only directly watering the block, 1 - 3x3 grid, 2 - 5x5 grid
+	public boolean full_blast=false;
 	
     @SideOnly(Side.CLIENT)
     public void initModel() {
-    	System.out.print("INIT MODEL HAPPENING! ");
     	ModelResourceLocation[] water_level_model = 
     			{
     			new ModelResourceLocation(getRegistryName() + "_level_0", "inventory"),
@@ -93,7 +97,6 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
         ModelLoader.setCustomMeshDefinition(this, new ItemMeshDefinition() {
         	@Override
             public ModelResourceLocation getModelLocation(ItemStack stack) {
-            	System.out.print("PRESTO! ");
         		return water_level_model[get_water_level_model(stack)];
             }
         });
@@ -198,6 +201,12 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
                         int water_level = (Integer)iblockstate.getValue(BlockHempPlot.MOISTURE).intValue();
                         worldIn.setBlockState(blockpos, blokky.getStateFromMeta(water_level + 1), 11);
                         //playerIn.addStat(StatList.getObjectUseStats(this));
+                        
+                        //a few particles to make it nice
+                        for (int k = 0; k < 16; ++k)
+                        {
+                            worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, (double)blockpos.getX() + Math.random(), (double)blockpos.up().getY() - Math.random(), (double)blockpos.getZ() + Math.random(), (double)Math.random(), (double)-8+Math.random(), (double)Math.random());
+                        }
                         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, this.drain_can(itemstack, playerIn, 1));
                     }
                     else
