@@ -66,6 +66,7 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
     @SuppressWarnings("null")
 	@SideOnly(Side.CLIENT)
     public void initModel() {
+    	System.out.print("EUSEBIUS! ");
     	ModelResourceLocation[] water_level_model = null; //it's okay, that's what the for loop below is for
     	
     	for (int w=0; w<=8; w++)
@@ -87,6 +88,7 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
         ModelLoader.setCustomMeshDefinition(this, new ItemMeshDefinition() {
         	@Override
             public ModelResourceLocation getModelLocation(ItemStack stack) {
+            	System.out.print("PRESTO! ");
         		return water_level_model[get_water_level_model(stack)];
             }
         });
