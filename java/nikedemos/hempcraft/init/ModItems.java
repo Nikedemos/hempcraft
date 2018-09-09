@@ -38,12 +38,7 @@ public final class ModItems {
 	private static Item addItem(Item item, String name) { 
 		return item.setRegistryName(Main.MODID, name).setUnlocalizedName(Main.MODID + "." + name);
 	}
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void registerModels(ModelRegistryEvent event) {
-        ((ItemWateringCan) WATERING_CAN_CLAY_FIRED).initModel(); 
-    }
-    
+
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Item> event) {
 		IForgeRegistry<Item> registry = event.getRegistry();

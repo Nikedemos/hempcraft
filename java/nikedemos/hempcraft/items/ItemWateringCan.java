@@ -63,16 +63,21 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
 		
 	public int max_water_level=16; //2 water blocks
 	
-    @SuppressWarnings("null")
-	@SideOnly(Side.CLIENT)
+    @SideOnly(Side.CLIENT)
     public void initModel() {
-    	System.out.print("EUSEBIUS! ");
-    	ModelResourceLocation[] water_level_model = null; //it's okay, that's what the for loop below is for
-    	
-    	for (int w=0; w<=8; w++)
-    	{
-    		water_level_model[w] = new ModelResourceLocation(getRegistryName() + "_level_"+Integer.toString(w), "inventory");
-    	}
+    	System.out.print("INIT MODEL HAPPENING! ");
+    	ModelResourceLocation[] water_level_model = 
+    			{
+    			new ModelResourceLocation(getRegistryName() + "_level_0", "inventory"),
+    			new ModelResourceLocation(getRegistryName() + "_level_1", "inventory"),
+    			new ModelResourceLocation(getRegistryName() + "_level_2", "inventory"),
+    			new ModelResourceLocation(getRegistryName() + "_level_3", "inventory"),
+    			new ModelResourceLocation(getRegistryName() + "_level_4", "inventory"),
+    			new ModelResourceLocation(getRegistryName() + "_level_5", "inventory"),
+    			new ModelResourceLocation(getRegistryName() + "_level_6", "inventory"),
+    			new ModelResourceLocation(getRegistryName() + "_level_7", "inventory"),
+    			new ModelResourceLocation(getRegistryName() + "_level_8", "inventory")
+    			};
 
     	ModelBakery.registerItemVariants(this,
     		water_level_model[0],

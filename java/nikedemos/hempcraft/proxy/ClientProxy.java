@@ -10,31 +10,29 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import nikedemos.hempcraft.init.ModBlocks;
 import nikedemos.hempcraft.init.ModItems;
+import nikedemos.hempcraft.items.ItemWateringCan;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
-
+	
 	@SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
-		
+		//items
 		registerItemModel(ModItems.HEMP_SEED);
 		registerItemModel(ModItems.HEMP_STEM);
 		registerItemModel(ModItems.HEMP_LEAF);
 		registerItemModel(ModItems.HEMP_BUD_FRESH);
 		registerItemModel(ModItems.HEMP_BUD_DRY);
-		registerItemModel(ModItems.WATERING_CAN_CLAY_FIRED);
 		
+		//this is how we register items dependant on NBT (or any other factors, like capabilities / stack number)
+        ((ItemWateringCan) ModItems.WATERING_CAN_CLAY_FIRED).initModel(); 
 		
-		
-		
+        //blocks
 		registerItemModel(Item.getItemFromBlock(ModBlocks.HEMP_STALK));
 		registerItemModel(Item.getItemFromBlock(ModBlocks.HEMP_PLOT));
 		registerItemModel(Item.getItemFromBlock(ModBlocks.HEMP_FLOWER_FEMALE));
 		registerItemModel(Item.getItemFromBlock(ModBlocks.HEMP_FLOWER_MALE));
 		registerItemModel(Item.getItemFromBlock(ModBlocks.HEMP_BUD));
-		
-		
-		
 
 	}
 

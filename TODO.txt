@@ -32,6 +32,7 @@ squares of the un-moduled values and modulo by 4. The resulting int will tell us
 
 - vegetative growth speed (4 genes, NUTID)
 - female flowering speed (2 genes, mNUTID) 
+- male flowering speed
 
 tolerances:
  - temperature A and temperature B (the smaller one will define minimum, the bigger one - maximum)
