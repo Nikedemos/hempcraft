@@ -23,6 +23,7 @@ public class ClientProxy extends CommonProxy {
 		registerItemModel(ModItems.HEMP_LEAF);
 		registerItemModel(ModItems.HEMP_BUD_FRESH);
 		registerItemModel(ModItems.HEMP_BUD_DRY);
+		registerItemModel(ModItems.HEMP_NUGGET);
 		
 		//this is how we register items dependant on NBT (or any other factors, like capabilities / stack number)
 		//remember, don't use the registerItemModel method for them!

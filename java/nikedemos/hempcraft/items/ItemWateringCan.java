@@ -34,6 +34,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.functions.SetMetadata;
@@ -79,23 +80,20 @@ diamond watering can: moisture capacity 256 (32 water blocks), 512 uses, range 5
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
-	//Zeroth, get the water_level and uses left (damage)
-    //First, get the max range, and cur_range (but only for max_range > 0)
-	//Second, get whether the full_blast mode is enabled (meaning, increase water level by 1, or by up to 7)
-	//tooltip.add(TextFormatting.GRAY+"Durability: "+TextFormatting.WHITE+TextFormatting.BOLD+(64-stack.getItemDamage())+"/"+stack.getMaxDamage()+TextFormatting.RESET);
 	tooltip.add(TextFormatting.BLUE+"Water: "+TextFormatting.AQUA+TextFormatting.BOLD+get_water_level(stack)+"/"+this.max_water_level+TextFormatting.RESET);
-	tooltip.add(TextFormatting.GOLD+"Range: "+TextFormatting.YELLOW+TextFormatting.BOLD+get_cur_range(stack)+"/"+get_max_range(stack)+TextFormatting.RESET);
+	String maybe_max = "";
 	
-	//only if max_range is larger than 1
-	if (get_max_range(stack)>0)
-	{
+	if (this.get_max_range(stack)>0)
+		maybe_max = " (max "+((get_max_range(stack)*2)+1)+"×"+((get_max_range(stack)*2)+1)+")";
+	
+	tooltip.add(TextFormatting.GOLD+"Range: "+TextFormatting.YELLOW+TextFormatting.BOLD+((get_cur_range(stack)*2)+1)+"×"+((get_cur_range(stack)*2)+1)+maybe_max+TextFormatting.RESET);
+	
 	String full_blast_mode="SINGLE";
 	
 	if (get_full_blast(stack))
 		full_blast_mode="FULL BLAST";
 	
-	tooltip.add(TextFormatting.DARK_GREEN+"Mode: "+TextFormatting.GREEN+TextFormatting.BOLD+full_blast_mode+TextFormatting.RESET);
-	}
+	tooltip.add(TextFormatting.DARK_GREEN+"Irrigation mode: "+TextFormatting.GREEN+TextFormatting.BOLD+full_blast_mode+TextFormatting.RESET);
 	
     }
 	
@@ -256,6 +254,7 @@ diamond watering can: moisture capacity 256 (32 water blocks), 512 uses, range 5
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
         /*
+         * Check if you're sneaking. If so, just set the full blast to its negative.
         The general algorithm
         
         Once you right-click, we have two possibilities.
@@ -268,8 +267,100 @@ diamond watering can: moisture capacity 256 (32 water blocks), 512 uses, range 5
         If we encounter a hemp plot, we transfer 1 water_level to hemp_plot's moisture.
         Then, we take 1 water_level and damage the held item by 1.
         */
-    	
         ItemStack itemstack = playerIn.getHeldItem(handIn);
+        
+    	if (playerIn.isSneaking()) //changing mode
+    	{
+    		ItemStack altered = itemstack;
+    		
+    		//first, take the "metamode":
+    		
+    		int metamode=3*(this.get_full_blast(altered) ? 1 : 0)+this.get_cur_range(altered);
+    		/*
+    		0+0 = 0 single, range 0
+    		0+1 = 1 single, range 1
+    		0+2 = 2 single, range 2
+    		
+    		3+0 = 3 blast, range 0
+    		3+1 = 4 blast, range 1
+    		3+2 = 5 blast, range 2
+    		*/
+    		
+    		//take different max ranges into account
+    		switch (this.get_max_range(altered))
+    		{
+    		case 0: //just go back and forth between 0 and 3
+    			{
+    			if (metamode==0)
+    				metamode=3;
+    			else if (metamode==3)
+    				metamode=0;
+    			} break;
+    		case 1:
+    			{
+    			metamode++;
+    			if (metamode==2 || metamode==4)
+    				{//add 1 more to skip
+    				
+    				}
+    			
+    			if (metamode>5) metamode=0; //back to start	
+    			} break;
+    		case 2: //change freely from 0 to 5
+    			{
+    	    		metamode++;
+    	    		if (metamode>5) metamode=0; //back to start
+    			} break;
+    		}
+
+    		
+    		//now we have the metamode, we added 1 (to get to the next mode).
+    		//decode the new metamode.
+    		
+    		boolean next_blast=false;
+    		int next_cur_range;
+    		
+    		if (metamode>2) //that means full blast is true
+    		{
+    		next_blast=true;
+    		metamode-=3;
+    		}
+    		
+    		//now take the "remainder" to see the range
+    		next_cur_range=metamode;
+    		
+    		//make the changes
+    		this.set_full_blast(altered, next_blast);
+    		this.set_cur_range(altered, next_cur_range);
+    		
+    		//notify the player
+            if (playerIn instanceof EntityPlayerMP)
+            	{
+            	String new_mode = "SINGLE";
+            	TextFormatting new_mode_color=TextFormatting.DARK_GREEN;
+            	
+                String new_range = ""+((next_cur_range*2)+1)+"×"+((next_cur_range*2)+1)+"";
+                TextFormatting new_range_color=TextFormatting.DARK_BLUE;
+            	
+            	if (next_blast==true)
+            	{
+            		new_mode = "FULL BLAST";
+            		new_mode_color=TextFormatting.GREEN;
+            	}
+            	
+            	switch (next_cur_range)
+            	{
+            	case 1: new_range_color=TextFormatting.BLUE; break;
+            	case 2: new_range_color=TextFormatting.AQUA; break;
+            	}
+            	
+            	playerIn.sendMessage(new TextComponentString("Irrigation mode: "+TextFormatting.BOLD+new_mode_color+new_mode+TextFormatting.RESET+", range: "+TextFormatting.BOLD+new_range_color+new_range+""));
+            	}
+    		
+            return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, altered);
+    	}
+    	else
+    	{
         RayTraceResult raytraceresult = this.rayTrace(worldIn, playerIn, true); //arg3=true: take liquids into account
         if (raytraceresult == null) //nothing
         {
@@ -305,17 +396,119 @@ diamond watering can: moisture capacity 256 (32 water blocks), 512 uses, range 5
 
                         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, this.fill_can(itemstack, playerIn, 8));
                     }
-                    else if (blokky == ModBlocks.HEMP_PLOT && this.get_water_level(itemstack)>0 && ((Integer)iblockstate.getValue(BlockHempPlot.MOISTURE)).intValue() < 7) //you'll never overfill by accident using a watering can
+                    else if (blokky == ModBlocks.HEMP_PLOT && this.get_water_level(itemstack)>0) //you'll never overfill by accident using a watering can
                     {
+                    //first, check if you're dealing with a grid (3x3 or 5x5) or just this particular block.
+                    //if it's just this block, make sure you check this condition:
+                    //((Integer)iblockstate.getValue(BlockHempPlot.MOISTURE)).intValue() < 7
+                    //okay, let's make it into a nice range of blocks - based on range.
+                    //ItemStack final_stack = itemstack;
+                    
+                    if ((this.get_cur_range(itemstack)==0 && ((Integer)iblockstate.getValue(BlockHempPlot.MOISTURE).intValue() < 7)) || (this.get_cur_range(itemstack)>0)) //for ranged, ignore plot's moisture level	
+                    	{
+                    	int x1=0;
+                    	int x2=0;
+                    	int z1=0;
+                    	int z2=0;
+                    	
+                    	int rng=this.get_cur_range(itemstack);
+                    	boolean blastey=this.get_full_blast(itemstack);
+                    	
+                    	if (worldIn.rand.nextBoolean() == true)
+                        {
+                            if (worldIn.rand.nextBoolean() == true)
+                            {
+                            x1 = rng;
+                            z1 = rng;
+                            
+                            x2 = -rng;
+                            z2 = -rng;
+                            }
+                            else
+                            {
+                            x1 = -rng;
+                            z1 = -rng;
+                                
+                            x2 = rng;
+                            z2 = rng;            	
+                            }
+                        }
+                        else
+                        {
+                            if (worldIn.rand.nextBoolean() == true)
+                                if (worldIn.rand.nextBoolean() == true)
+                                {
+                                x1 = rng;
+                                z1 = -rng;
+                                
+                                x2 = -rng;
+                                z2 = rng;
+                                }
+                                else
+                                {
+                                x1 = rng;
+                                z1 = -rng;
+                                    
+                                x2 = -rng;
+                                z2 = rng;            	
+                                }
+                        }
                         
-                    	int water_level = (Integer)iblockstate.getValue(BlockHempPlot.MOISTURE).intValue();
-                        worldIn.setBlockState(blockpos, blokky.getStateFromMeta(water_level + 1), 11);
+                        //now, do a grid - 1 by 1 by 1 IS also a grid, yo.
+                        //but remember - if cur_range>0, 
+                        for (BlockPos.MutableBlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(blockpos.add(x1, 0, z1), blockpos.add(x2, 0, z2)))
+                        {                   	
+                        //first, check if we're still dealing with hemp plot at this location:
+                        IBlockState statey = worldIn.getBlockState(blockpos$mutableblockpos);
+                        Block block_type = statey.getBlock();
+                        boolean is_hemp_plot = (block_type==ModBlocks.HEMP_PLOT);
+                        
+                        if (is_hemp_plot==true)
+                        {
+                        //and this is the actual moisture at that position
+                        int water_level = (Integer)statey.getValue(BlockHempPlot.MOISTURE).intValue();
+                            
+                        	
+                        //now check if that block will accept any more water - and for FULL BLAST mode - how MUCH more.
+                        int this_many_waters_please=0;
+                        
+                        if (blastey==true)
+                        {
+                        this_many_waters_please=7-water_level; //max 7
+                        }
+                        else if (water_level<7)
+                        {
+                        this_many_waters_please=1; //just 1 if not full blast - but only if you're not full.
+                        }
+                        
+                        //okay, how much water can I give you, dear hemp plot?
+                        int stack_durability = itemstack.getMaxDamage()-itemstack.getItemDamage();
+                        
+                        int i_can_give_you_this_many_waters=Math.min(Math.min(this.get_water_level(itemstack), stack_durability), 7); //max 7
+                        
+                        int agreed_waters=Math.min(this_many_waters_please, i_can_give_you_this_many_waters);
+                        
+                        //now - if we're in the full blast mode, take as much water as you can.
+                        //bottlenecks:
+                        // this_many_waters_please, i_can_give_you_this_many, itemstack remaining durability
+                        
+                        if (agreed_waters>0)
+                        {
+                        worldIn.setBlockState(blockpos$mutableblockpos, block_type.getStateFromMeta(water_level + agreed_waters), 11);
                         //playerIn.addStat(StatList.getObjectUseStats(this));
-                        
+                        this.drain_can(itemstack, playerIn, agreed_waters); //damage by agreed_waters
                         //a few particles to make it nice
-                        HempCraftVaria.water_splash(worldIn, blockpos, 16);
+                        HempCraftVaria.water_splash(worldIn, blockpos$mutableblockpos.up(), agreed_waters*4);
+                        }
                         
-                        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, this.drain_can(itemstack, playerIn, 1));
+                        }
+                        
+                        } //that's it for each block
+                        
+
+                        }
+                        
+                        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
                     }
                     else
                     {
@@ -325,6 +518,7 @@ diamond watering can: moisture capacity 256 (32 water blocks), 512 uses, range 5
                 }
             }
         }
+    }
     }
     
     private ItemStack fill_can(ItemStack canny, EntityPlayer player, int levels)

@@ -19,6 +19,7 @@ import nikedemos.hempcraft.items.ItemBase;
 import nikedemos.hempcraft.items.ItemBaseSeeds;
 import nikedemos.hempcraft.items.ItemBlockBase;
 import nikedemos.hempcraft.items.ItemBud;
+import nikedemos.hempcraft.items.ItemTokable;
 import nikedemos.hempcraft.items.ItemWateringCan;
 import nikedemos.hempcraft.util.HempCraftConfig;
 
@@ -31,6 +32,8 @@ public final class ModItems {
 	public static final Item HEMP_LEAF = addItem(new ItemBase(),"hemp_leaf");
 	public static final Item HEMP_BUD_FRESH = addItem(new ItemBud(),"hemp_bud_fresh");
 	public static final Item HEMP_BUD_DRY = addItem(new ItemBase(),"hemp_bud_dry");
+	public static final Item HEMP_NUGGET = addItem(new ItemTokable(),"hemp_nugget");
+	
 	public static final Item WATERING_CAN_CLAY_FIRED = addItem(new ItemWateringCan(16, 0, 64),"watering_can_clay_fired");
 	public static final Item WATERING_CAN_IRON = addItem(new ItemWateringCan(48, 1, 96),"watering_can_iron");
 	public static final Item WATERING_CAN_GOLD = addItem(new ItemWateringCan(32, 1, 128),"watering_can_gold");
@@ -49,6 +52,7 @@ public final class ModItems {
 		registry.register(HEMP_LEAF);
 		registry.register(HEMP_BUD_FRESH);
 		registry.register(HEMP_BUD_DRY);
+		registry.register(HEMP_NUGGET);
 		registry.register(WATERING_CAN_CLAY_FIRED);
 		registry.register(WATERING_CAN_IRON);
 		registry.register(WATERING_CAN_GOLD);
@@ -59,8 +63,6 @@ public final class ModItems {
 		registry.register(new ItemBlock(ModBlocks.HEMP_FLOWER_FEMALE).setRegistryName( ModBlocks.HEMP_FLOWER_FEMALE.getRegistryName()));
 		registry.register(new ItemBlock(ModBlocks.HEMP_FLOWER_MALE).setRegistryName( ModBlocks.HEMP_FLOWER_MALE.getRegistryName()));
 		registry.register(new ItemBlock(ModBlocks.HEMP_BUD).setRegistryName( ModBlocks.HEMP_BUD.getRegistryName()));
-		
-		
 	}
 	
 }
