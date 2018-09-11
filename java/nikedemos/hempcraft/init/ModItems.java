@@ -31,9 +31,10 @@ public final class ModItems {
 	public static final Item HEMP_LEAF = addItem(new ItemBase(),"hemp_leaf");
 	public static final Item HEMP_BUD_FRESH = addItem(new ItemBud(),"hemp_bud_fresh");
 	public static final Item HEMP_BUD_DRY = addItem(new ItemBase(),"hemp_bud_dry");
-	public static final Item WATERING_CAN_CLAY_FIRED = addItem(new ItemWateringCan(16, 0, 64),"watering_can_clay_fired");	
-	
-	
+	public static final Item WATERING_CAN_CLAY_FIRED = addItem(new ItemWateringCan(16, 0, 64),"watering_can_clay_fired");
+	public static final Item WATERING_CAN_IRON = addItem(new ItemWateringCan(48, 1, 96),"watering_can_iron");
+	public static final Item WATERING_CAN_GOLD = addItem(new ItemWateringCan(32, 1, 128),"watering_can_gold");
+	public static final Item WATERING_CAN_DIAMOND = addItem(new ItemWateringCan(256, 2, 1024),"watering_can_diamond");
 	
 	private static Item addItem(Item item, String name) { 
 		return item.setRegistryName(Main.MODID, name).setUnlocalizedName(Main.MODID + "." + name);
@@ -49,9 +50,10 @@ public final class ModItems {
 		registry.register(HEMP_BUD_FRESH);
 		registry.register(HEMP_BUD_DRY);
 		registry.register(WATERING_CAN_CLAY_FIRED);
+		registry.register(WATERING_CAN_IRON);
+		registry.register(WATERING_CAN_GOLD);
+		registry.register(WATERING_CAN_DIAMOND);
 		
-
-
 		registry.register(new ItemBlock(ModBlocks.HEMP_STALK).setRegistryName( ModBlocks.HEMP_STALK.getRegistryName()));
 		registry.register(new ItemBlock(ModBlocks.HEMP_PLOT).setRegistryName( ModBlocks.HEMP_PLOT.getRegistryName()));
 		registry.register(new ItemBlock(ModBlocks.HEMP_FLOWER_FEMALE).setRegistryName( ModBlocks.HEMP_FLOWER_FEMALE.getRegistryName()));

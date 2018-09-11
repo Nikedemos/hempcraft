@@ -216,31 +216,6 @@ public class BlockHempStalk extends BlockCrops implements IGrowable{
     								//you get a number very, very close to 0.5 (actually 0.49933655748832, according to PHP)
     			 					//believe it or not, I kinda bruteforced that number by playing "higher" or "lower"
 									//with digits at consecutive decimal places until the result matched 0.5 closely.
-									//
-									// Here's a poem to explain it.
-									// ..don't ask. Just... just don't.
-									//
-									//         
-									//    	  ~~~~~~~~~~~~~~~~~~
-									//A myriad seeds would ought be sown,
-									//A thousand plots would need be digged,
-									//A million crops will have been grown,
-									//To see that game of life was rigged.
-									//
-									//And rigged are dice, and cards as well.
-									//Beware the house! It always wins.
-									//The scythe? It's fair! For it can't tell
-									//The lowly peasants from the kings.
-    								//
-    								//One sows, it reaps - that's how it goes;
-    								//A vicious cycle, there's no doubt.
-    								//A harvest means the end of woes
-    								//And it's the only one way out.
-    								//
-    								//The Mower's weary. Scythe is dull.
-    								//The earth is barren. Help the man
-    								//And separate the grain from hull.
-    								//But leave the corn... and take the bran.
     								
     			stage_survival_chance=((100-(16-(age/i_divisor))))/100;
     			}

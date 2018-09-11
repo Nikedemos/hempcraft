@@ -1,5 +1,7 @@
 package nikedemos.hempcraft.items;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.advancements.CriteriaTriggers;
@@ -9,6 +11,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -24,11 +28,13 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.functions.SetMetadata;
 import net.minecraftforge.client.model.ModelLoader;
@@ -39,6 +45,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import nikedemos.hempcraft.Main;
 import nikedemos.hempcraft.blocks.BlockHempPlot;
 import nikedemos.hempcraft.init.ModBlocks;
+import nikedemos.hempcraft.init.ModItems;
+import nikedemos.hempcraft.util.HempCraftVaria;
 
 
 public class ItemWateringCan extends ItemBase {
@@ -53,12 +61,12 @@ public class ItemWateringCan extends ItemBase {
 
 Watering can: has moisture capacity, has damage (uses left), has range
 
-clay watering can: moisture capacity 16 (2 water blocks), 64 uses, range 1x1
+clay watering can: moisture capacity 16 (2 water blocks), 64 uses, range 1x1 (0)
 
-iron watering can: moisture capacity 48 (6 water blocks), 96 uses, range 3x3
-gold watering can: moisture capacity 32 (4 water blocks), 128 uses, range 3x3
+iron watering can: moisture capacity 48 (6 water blocks), 96 uses, range 3x3 (1)
+gold watering can: moisture capacity 32 (4 water blocks), 128 uses, range 3x3 (1)
 
-diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5x5
+diamond watering can: moisture capacity 256 (32 water blocks), 512 uses, range 5x5 (2)
 		 */
 	
 	}
@@ -66,7 +74,55 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
 	public int max_water_level; //2 water blocks capacity
 	public int max_range; //range 1: 3x3, range 2: 5x5
 	public int cur_range=0; //0 means we're only directly watering the block, 1 - 3x3 grid, 2 - 5x5 grid
-	public boolean full_blast=false;
+	
+	@Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+    {
+	//Zeroth, get the water_level and uses left (damage)
+    //First, get the max range, and cur_range (but only for max_range > 0)
+	//Second, get whether the full_blast mode is enabled (meaning, increase water level by 1, or by up to 7)
+	//tooltip.add(TextFormatting.GRAY+"Durability: "+TextFormatting.WHITE+TextFormatting.BOLD+(64-stack.getItemDamage())+"/"+stack.getMaxDamage()+TextFormatting.RESET);
+	tooltip.add(TextFormatting.BLUE+"Water: "+TextFormatting.AQUA+TextFormatting.BOLD+get_water_level(stack)+"/"+this.max_water_level+TextFormatting.RESET);
+	tooltip.add(TextFormatting.GOLD+"Range: "+TextFormatting.YELLOW+TextFormatting.BOLD+get_cur_range(stack)+"/"+get_max_range(stack)+TextFormatting.RESET);
+	
+	//only if max_range is larger than 1
+	if (get_max_range(stack)>0)
+	{
+	String full_blast_mode="SINGLE";
+	
+	if (get_full_blast(stack))
+		full_blast_mode="FULL BLAST";
+	
+	tooltip.add(TextFormatting.DARK_GREEN+"Mode: "+TextFormatting.GREEN+TextFormatting.BOLD+full_blast_mode+TextFormatting.RESET);
+	}
+	
+    }
+	
+	@Override
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
+	{
+        if (this.isInCreativeTab(tab))
+        {
+		ItemStack empty_type = new ItemStack(this);
+		ItemStack full_type = new ItemStack(this);
+		
+		this.set_water_level(empty_type, 0);
+		this.set_water_level(full_type, this.max_water_level);
+		
+		this.set_full_blast(empty_type, false);
+		this.set_full_blast(full_type, false);
+		
+		this.set_max_range(empty_type, this.max_range);
+		this.set_max_range(full_type, this.max_range);
+		
+		this.set_cur_range(empty_type, 0);
+		this.set_cur_range(full_type, 0);		
+		
+		items.add(empty_type);
+		items.add(full_type);
+        }
+	}
 	
     @SideOnly(Side.CLIENT)
     public void initModel() {
@@ -125,6 +181,65 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
     else return rettie;
     }
     
+    public void set_full_blast(ItemStack stack, boolean blast)
+    {
+    getTagCompoundSafe(stack).setBoolean("full_blast", blast);
+    }
+    
+    public boolean get_full_blast(ItemStack stack)
+    {
+    boolean rettie=false;
+    NBTTagCompound taggy=getTagCompoundSafe(stack);
+    
+    //check if it has a tag, if not, you're the default level - 0
+    if (!taggy.hasNoTags() && taggy.hasKey("full_blast"))
+    {
+    	return taggy.getBoolean("full_blast");
+    }
+    else return rettie;
+    }
+    
+    public void set_max_range(ItemStack stack, int range)
+    {
+    getTagCompoundSafe(stack).setInteger("max_range", range);
+    }
+    
+    public int get_max_range(ItemStack stack)
+    {
+    int rettie=0;
+    NBTTagCompound taggy=getTagCompoundSafe(stack);
+    
+    //check if it has a tag, if not, you're the default level - 0
+    if (!taggy.hasNoTags() && taggy.hasKey("max_range"))
+    {
+    	return taggy.getInteger("max_range");
+    }
+    else return rettie;
+    }
+    
+    public void set_cur_range(ItemStack stack, int range)
+    {
+    getTagCompoundSafe(stack).setInteger("cur_range", range);
+    }
+    
+    public int get_cur_range(ItemStack stack)
+    {
+    int rettie=0;
+    NBTTagCompound taggy=getTagCompoundSafe(stack);
+    
+    //check if it has a tag, if not, you're the default level - 0
+    if (!taggy.hasNoTags() && taggy.hasKey("cur_range"))
+    {
+    	return taggy.getInteger("cur_range");
+    }
+    else return rettie;
+    }
+    
+    public void set_water_level(ItemStack stack, int level)
+    {
+    getTagCompoundSafe(stack).setInteger("water_level", level);
+    }
+    
     public int get_water_level(ItemStack stack)
     {
     int rettie=0;
@@ -136,12 +251,6 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
     	return taggy.getInteger("water_level");
     }
     else return rettie;
-    }
-
-
-    public void set_water_level(ItemStack stack, int level)
-    {
-    getTagCompoundSafe(stack).setInteger("water_level", level);
     }
     
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
@@ -198,15 +307,14 @@ diamond watering can: moisture capacity 128 (16 water blocks), 512 uses, range 5
                     }
                     else if (blokky == ModBlocks.HEMP_PLOT && this.get_water_level(itemstack)>0 && ((Integer)iblockstate.getValue(BlockHempPlot.MOISTURE)).intValue() < 7) //you'll never overfill by accident using a watering can
                     {
-                        int water_level = (Integer)iblockstate.getValue(BlockHempPlot.MOISTURE).intValue();
+                        
+                    	int water_level = (Integer)iblockstate.getValue(BlockHempPlot.MOISTURE).intValue();
                         worldIn.setBlockState(blockpos, blokky.getStateFromMeta(water_level + 1), 11);
                         //playerIn.addStat(StatList.getObjectUseStats(this));
                         
                         //a few particles to make it nice
-                        for (int k = 0; k < 16; ++k)
-                        {
-                            worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, (double)blockpos.getX() + Math.random(), (double)blockpos.up().getY() - Math.random(), (double)blockpos.getZ() + Math.random(), (double)Math.random(), (double)-8+Math.random(), (double)Math.random());
-                        }
+                        HempCraftVaria.water_splash(worldIn, blockpos, 16);
+                        
                         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, this.drain_can(itemstack, playerIn, 1));
                     }
                     else

@@ -32,6 +32,7 @@ import net.minecraft.world.World;
 import nikedemos.hempcraft.Main;
 import nikedemos.hempcraft.init.ModBlocks;
 import nikedemos.hempcraft.items.ItemBaseSeeds;
+import nikedemos.hempcraft.util.HempCraftVaria;
 
 public class BlockHempPlot extends BlockFarmland {
 	
@@ -46,10 +47,15 @@ public class BlockHempPlot extends BlockFarmland {
 		this.setHardness(0.6F);
     }
     
+    @Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
+        return Blocks.FARMLAND.getItemDropped(Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.COARSE_DIRT), rand, fortune);
+    }
+    
     public static void turnToCoarseDirt(World p_190970_0_, BlockPos worldIn)
     {
-        System.out.print("COARSEY");
-    	p_190970_0_.setBlockState(worldIn, Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.COARSE_DIRT));
+        p_190970_0_.setBlockState(worldIn, Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.COARSE_DIRT));
         AxisAlignedBB axisalignedbb = field_194405_c.offset(worldIn);
 
         for (Entity entity : p_190970_0_.getEntitiesWithinAABBExcludingEntity((Entity)null, axisalignedbb))
@@ -277,8 +283,11 @@ public class BlockHempPlot extends BlockFarmland {
         }
         if (item == Items.WATER_BUCKET)
         {
+            HempCraftVaria.water_splash(worldIn, pos, 64);
+            
             if (!worldIn.isRemote)
             {
+                
                 if (!playerIn.capabilities.isCreativeMode)
                 {
                     playerIn.setHeldItem(hand, new ItemStack(Items.BUCKET));
@@ -294,7 +303,6 @@ public class BlockHempPlot extends BlockFarmland {
                 	}
                 
                 worldIn.playSound((EntityPlayer)null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                
             }
 
             return true;

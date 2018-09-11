@@ -3,6 +3,7 @@ package nikedemos.hempcraft.util;
 
 import java.util.Random;
 
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -13,6 +14,15 @@ public class HempCraftVaria {
 		double deltaZ = pos1.getZ() - pos2.getZ();
 			
 		return Math.sqrt((deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ));
+	}
+	
+	public static void water_splash(World worldIn, BlockPos blockpos, int count)
+	{
+		System.out.print("SPLASH");
+        for (int k = 0; k < count; k++)
+        {
+            worldIn.spawnParticle(EnumParticleTypes.WATER_SPLASH, (double)blockpos.getX() + Math.random(), (double)blockpos.up().getY() - Math.random(), (double)blockpos.getZ() + Math.random(), (double)Math.random(), (double)-8+Math.random(), (double)Math.random());
+        }
 	}
 
 	public static int dice(Random rand, int sides, int times, int dice_starts_at)

@@ -1,0 +1,7 @@
+{
+    "parent": "hemp:item/watering_can_big",
+    "textures": {
+        "layer0": "hemp:items/watering_can_diamond",
+        "layer1": "hemp:items/watering_can_level_6"
+    }
+}
