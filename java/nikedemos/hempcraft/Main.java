@@ -91,8 +91,10 @@ public class Main {
 		MinecraftForge.EVENT_BUS.register(new FollowingHandler(EntityPig.class,ModItems.HEMP_SEED));
 		MinecraftForge.EVENT_BUS.register(new BreedingHandler(EntityPig.class,ModItems.HEMP_SEED));
 		
-		//
+		//some handlers
+		
 		MinecraftForge.EVENT_BUS.register(nikedemos.hempcraft.handlers.HoeHandler.class);
+		MinecraftForge.EVENT_BUS.register(nikedemos.hempcraft.handlers.HighHandler.class);
 	}
 	
 	@EventHandler

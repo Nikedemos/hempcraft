@@ -13,4 +13,7 @@ tile.hemp.hemp_plot.name=Hemp Plot
 tile.hemp.hemp_flower_female.name=Hemp Flower (Female)
 tile.hemp.hemp_flower_male.name=Hemp Flower (Male)
 tile.hemp.hemp_bud.name=Hemp Bud (Fresh)
+
+effect.hemp.high.name=High
+
 itemGroup.hemp=HempCraft
