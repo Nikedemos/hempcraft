@@ -3,3 +3,5 @@ So far, the following people have helped me with the development of HempCraft:
 - Cleverpanda, https://github.com/cleverpanda
 - Noppes, https://github.com/Noppes
 - V0idWa1k3r, https://github.com/V0idWa1k3r
+- SandedShoes, https://github.com/SandedShoes
+- gigaherz, https://github.com/gigaherz
