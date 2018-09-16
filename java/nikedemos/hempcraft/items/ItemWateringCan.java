@@ -301,7 +301,7 @@ diamond watering can: moisture capacity 256 (32 water blocks), 512 uses, range 5
     			metamode++;
     			if (metamode==2 || metamode==4)
     				{//add 1 more to skip
-    				
+    				metamode++;
     				}
     			
     			if (metamode>5) metamode=0; //back to start	

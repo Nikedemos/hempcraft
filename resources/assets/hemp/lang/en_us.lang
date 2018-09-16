@@ -14,6 +14,18 @@ tile.hemp.hemp_flower_female.name=Hemp Flower (Female)
 tile.hemp.hemp_flower_male.name=Hemp Flower (Male)
 tile.hemp.hemp_bud.name=Hemp Bud (Fresh)
 
-effect.hemp.high.name=High
+effect.hemp.buzzed.name=Buzzed
+effect.hemp.strunk.name=Strunk
+effect.hemp.lit_up.name=Lit up
+effect.hemp.stoned.name=Stoned
+effect.hemp.ripped.name=Ripped
+
+effect.hemp.blitzed.name=Blitzed
+effect.hemp.faded.name=Faded
+effect.hemp.blazed.name=Blazed
+effect.hemp.krunked.name=Krunked
+effect.hemp.zoned.name=Zoned
+
+effect.hemp.i_and_i.name=I and I
 
 itemGroup.hemp=HempCraft

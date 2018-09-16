@@ -32,16 +32,14 @@ public class PseudoPotionBase extends Potion
 		//
 		return (super.getStatusIconIndex());
 	}
-	
-    @Override
-    public void performEffect(EntityLivingBase entity, int amplifier)
+
+	@Override
+    public java.util.List<net.minecraft.item.ItemStack> getCurativeItems()
     {
-        entity.setVelocity(0D, 0D, 0D);
-        entity.velocityChanged = true;
-        entity.moveVertical = 0;
-        entity.moveStrafing = 0;
-        entity.motionX      = 0;
-        entity.motionZ      = 0;
-    }	
+	//can't cure it with items, I mean, come on.
+	//you knew what you were signing up for.
+		
+    return new java.util.ArrayList<net.minecraft.item.ItemStack>();
+    }
 }
 
