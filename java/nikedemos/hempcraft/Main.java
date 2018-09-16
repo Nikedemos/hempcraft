@@ -26,13 +26,17 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.RegistryManager;
+import nikedemos.hempcraft.capability.CapabilityRegeneration;
 import nikedemos.hempcraft.handlers.BreedingHandler;
 import nikedemos.hempcraft.handlers.FollowingHandler;
 import nikedemos.hempcraft.handlers.HoeHandler;
 import nikedemos.hempcraft.init.ModItems;
+import nikedemos.hempcraft.network.NetworkHandler;
 import nikedemos.hempcraft.proxy.CommonProxy;
 import nikedemos.hempcraft.util.HempCraftConfig;
 import nikedemos.hempcraft.util.HempCraftCreativeTab;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Main.MODID, name = Main.NAME, version = Main.VERSION)
 
@@ -49,12 +53,18 @@ public class Main {
 	@Instance(MODID)
 	public static Main instance;
 	
+
+    public static Logger LOG = LogManager.getLogger(NAME);
+	
 	@SidedProxy(clientSide = "nikedemos.hempcraft.proxy.ClientProxy", serverSide = "nikedemos.hempcraft.proxy.ServerProxy")
 	public static CommonProxy proxy;
 	
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
-
+		//thanks, Sub!
+		CapabilityRegeneration.init();
+	    
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		HempCraftConfig.load(config);
 		
@@ -91,14 +101,15 @@ public class Main {
 		MinecraftForge.EVENT_BUS.register(new FollowingHandler(EntityPig.class,ModItems.HEMP_SEED));
 		MinecraftForge.EVENT_BUS.register(new BreedingHandler(EntityPig.class,ModItems.HEMP_SEED));
 		
-		//some handlers
+		//some non-static handlers
 		
 		MinecraftForge.EVENT_BUS.register(nikedemos.hempcraft.handlers.HoeHandler.class);
-		MinecraftForge.EVENT_BUS.register(nikedemos.hempcraft.handlers.HighHandler.class);
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event){
+		//thanks AGAIN, sub!
+		NetworkHandler.init();
 		
 		proxy.registerOreDicts();
 		

@@ -18,4 +18,6 @@ public class CapabilityHandler {
 	{
 	event.addCapability(HIGHNESS, new HighnessProvider()); 
 	}
+	
+	
 }
