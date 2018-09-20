@@ -2,7 +2,7 @@ package nikedemos.hempcraft.states;
 
 import nikedemos.hempcraft.capability.CapabilityRegeneration;
 import nikedemos.hempcraft.capability.IRegeneration;
-import nikedemos.hempcraft.init.RObjects;
+import nikedemos.hempcraft.capability.RObjects;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundEvent;

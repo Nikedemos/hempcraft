@@ -4,7 +4,7 @@ import nikedemos.hempcraft.Main;
 import nikedemos.hempcraft.handlers.layers.LayerRegeneration;
 import nikedemos.hempcraft.capability.CapabilityRegeneration;
 import nikedemos.hempcraft.capability.IRegeneration;
-import nikedemos.hempcraft.init.RObjects;
+import nikedemos.hempcraft.capability.RObjects;
 import nikedemos.hempcraft.util.LimbManipulationUtil;
 import nikedemos.hempcraft.util.RenderUtil;
 import net.minecraft.client.Minecraft;

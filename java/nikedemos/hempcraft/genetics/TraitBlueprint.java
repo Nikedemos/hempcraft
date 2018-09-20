@@ -1,5 +1,5 @@
 package nikedemos.hempcraft.genetics;
 
-public class Genome {
+public class TraitBlueprint {
 
 }

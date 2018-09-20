@@ -2,7 +2,7 @@ package nikedemos.hempcraft.items;
 
 import nikedemos.hempcraft.capability.CapabilityRegeneration;
 import nikedemos.hempcraft.capability.IRegeneration;
-import nikedemos.hempcraft.init.RObjects;
+import nikedemos.hempcraft.capability.RObjects;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

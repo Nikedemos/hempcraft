@@ -1,4 +1,4 @@
-package nikedemos.hempcraft.init;
+package nikedemos.hempcraft.capability;
 
 import nikedemos.hempcraft.Main;
 import nikedemos.hempcraft.items.ItemFobWatch;
