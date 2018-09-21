@@ -1,8 +1,8 @@
 package nikedemos.hempcraft.handlers.layers;
 
 import nikedemos.hempcraft.Main;
-import nikedemos.hempcraft.capability.CapabilityRegeneration;
-import nikedemos.hempcraft.capability.IRegeneration;
+import nikedemos.hempcraft.capability.CapabilityHighness;
+import nikedemos.hempcraft.capability.IHighness;
 import nikedemos.hempcraft.util.RenderUtil;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -38,15 +38,15 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
     @Override
     public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        IRegeneration capability = CapabilityRegeneration.get(player);
-        if (capability.isCapable() && capability.isRegenerating()) {
-            Main.LOG.info(capability.getTicksRegenerating());
+        IHighness capability = CapabilityHighness.get(player);
+        if (capability.isCapable() && capability.isHigh()) {
+            Main.LOG.info(capability.getTicksHigh());
             renderEffect(playerRenderer, capability, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
         }
     }
 
 
-    private void renderEffect(RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float v, float v1, float v2, float v3, float v4, float v5, float v6) {
+    private void renderEffect(RenderLivingBase<?> renderLivingBase, IHighness capability, EntityPlayer entityPlayer, float v, float v1, float v2, float v3, float v4, float v5, float v6) {
         ModelBiped model = (ModelBiped) renderLivingBase.getMainModel();
 
         // State manager changes
@@ -62,8 +62,8 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
         Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
         Color secondaryColor = new Color(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 
-        float primaryScale = capability.getTimesRegenerated() * 40f;
-        float secondaryScale = capability.getTimesRegenerated() * 70f;
+        float primaryScale = capability.getTimesHigh() * 40f;
+        float secondaryScale = capability.getTimesHigh() * 70f;
 
         // Render right cone
         GlStateManager.pushMatrix();

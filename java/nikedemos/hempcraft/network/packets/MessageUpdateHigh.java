@@ -1,8 +1,8 @@
 package nikedemos.hempcraft.network.packets;
 
 import io.netty.buffer.ByteBuf;
-import nikedemos.hempcraft.capability.CapabilityRegeneration;
-import nikedemos.hempcraft.capability.IRegeneration;
+import nikedemos.hempcraft.capability.CapabilityHighness;
+import nikedemos.hempcraft.capability.IHighness;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,15 +17,15 @@ import java.util.UUID;
  * Created by Sub
  * on 16/09/2018.
  */
-public class MessageUpdateRegen implements IMessage {
+public class MessageUpdateHigh implements IMessage {
 
     private EntityPlayer player;
     private NBTTagCompound data;
 
-    public MessageUpdateRegen() {
+    public MessageUpdateHigh() {
     }
 
-    public MessageUpdateRegen(EntityPlayer player, NBTTagCompound data) {
+    public MessageUpdateHigh(EntityPlayer player, NBTTagCompound data) {
         this.player = player;
         this.data = data;
     }
@@ -44,13 +44,13 @@ public class MessageUpdateRegen implements IMessage {
             data = ByteBufUtils.readTag(buf);
     }
 
-    public static class Handler implements IMessageHandler<MessageUpdateRegen, IMessage> {
+    public static class Handler implements IMessageHandler<MessageUpdateHigh, IMessage> {
 
         @Override
-        public IMessage onMessage(MessageUpdateRegen message, MessageContext ctx) {
+        public IMessage onMessage(MessageUpdateHigh message, MessageContext ctx) {
             EntityPlayer player = message.player;
-            if (player == null || !player.hasCapability(CapabilityRegeneration.CAPABILITY, null)) return null;
-            IRegeneration handler = player.getCapability(CapabilityRegeneration.CAPABILITY, null);
+            if (player == null || !player.hasCapability(CapabilityHighness.CAPABILITY, null)) return null;
+            IHighness handler = player.getCapability(CapabilityHighness.CAPABILITY, null);
             Minecraft.getMinecraft().addScheduledTask(() -> handler.deserializeNBT(message.data));
             return null;
         }

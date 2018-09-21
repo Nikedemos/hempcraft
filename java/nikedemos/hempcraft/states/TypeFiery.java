@@ -1,7 +1,7 @@
 package nikedemos.hempcraft.states;
 
-import nikedemos.hempcraft.capability.CapabilityRegeneration;
-import nikedemos.hempcraft.capability.IRegeneration;
+import nikedemos.hempcraft.capability.CapabilityHighness;
+import nikedemos.hempcraft.capability.IHighness;
 import nikedemos.hempcraft.capability.RObjects;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
@@ -54,7 +54,7 @@ public class TypeFiery implements IRegenType {
         if (player.world.isRemote)
             return;
 
-        IRegeneration handler = CapabilityRegeneration.get(player);
+        IHighness handler = CapabilityHighness.get(player);
         // player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.REGENERATION.postRegenerationDuration * 2, RegenConfig.REGENERATION.postRegenerationLevel - 1, false, false)); // 180 seconds of 20 ticks of Regeneration 4
         //   handler.setTrait(TraitHandler.getRandomTrait());
         //    player.sendStatusMessage(new TextComponentTranslation(handler.getTrait().getMessage()), true);

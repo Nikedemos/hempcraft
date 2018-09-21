@@ -1,6 +1,6 @@
 package nikedemos.hempcraft.capability;
 
-import nikedemos.hempcraft.states.RegenType;
+//import nikedemos.hempcraft.states.RegenType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -9,26 +9,26 @@ import net.minecraftforge.common.util.INBTSerializable;
  * Created by Sub
  * on 16/09/2018.
  */
-public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
+public interface IHighness extends INBTSerializable<NBTTagCompound> {
 
     void update();
 
-    int getTicksRegenerating();
+    int getTicksHigh();
 
     //Regen Ticks
-    void setTicksRegenerating(int ticks);
+    void setTicksHigh(int ticks);
 
     //Returns the player
     EntityPlayer getPlayer();
 
     //Lives
-    int getLivesLeft();
+    //int getLivesLeft();
 
-    void setLivesLeft(int left);
+    //void setLivesLeft(int left);
 
-    int getTimesRegenerated();
+    int getTimesHigh();
 
-    void setTimesRegenerated(int times);
+    void setTimesHigh(int times);
 
     NBTTagCompound getStyle();
 
@@ -37,13 +37,13 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     //Sync
     void sync();
 
-    RegenType getType();
+    //RegenType getType();
 
     boolean isCapable();
 
     void setCapable(boolean capable);
 
-    boolean isRegenerating();
+    boolean isHigh();
 
-    void setRegenerating(boolean regenerating);
+    void setHigh(boolean regenerating);
 }

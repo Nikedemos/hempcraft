@@ -3,7 +3,7 @@ package nikedemos.hempcraft.capability;
 import nikedemos.hempcraft.Main;
 import nikedemos.hempcraft.states.RegenType;
 import nikedemos.hempcraft.network.NetworkHandler;
-import nikedemos.hempcraft.network.packets.MessageUpdateRegen;
+import nikedemos.hempcraft.network.packets.MessageUpdateHigh;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -18,57 +18,57 @@ import net.minecraftforge.fml.common.Mod;
  * on 16/09/2018.
  */
 @Mod.EventBusSubscriber(modid = Main.MODID)
-public class CapabilityRegeneration implements IRegeneration {
+public class CapabilityHighness implements IHighness {
 
-    public static final ResourceLocation REGEN_ID = new ResourceLocation(Main.MODID, "regeneration");
-    @CapabilityInject(IRegeneration.class)
-    public static final Capability<IRegeneration> CAPABILITY = null;
-    private int timesRegenerated = 0, livesLeft = 12, regenTicks = 0;
+    public static final ResourceLocation HIGHNESS_ID = new ResourceLocation(Main.MODID, "highness");
+    @CapabilityInject(IHighness.class)
+    public static final Capability<IHighness> CAPABILITY = null;
+    private int timesHigh = 0, highTicks = 0;
+    
     private EntityPlayer player;
-    private boolean isRegenerating = false, isCapable = false;
-    private String typeName = RegenType.FIERY.getType().getName();
+    private boolean isHigh = false, isCapable = true;
+    //private String typeName = RegenType.FIERY.getType().getName();
 
-    public CapabilityRegeneration() {
+    public CapabilityHighness() {
     }
 
-    public CapabilityRegeneration(EntityPlayer player) {
+    public CapabilityHighness(EntityPlayer player) {
         this.player = player;
     }
 
     public static void init() {
-        CapabilityManager.INSTANCE.register(IRegeneration.class, new RegenerationStorage(), CapabilityRegeneration::new);
+        CapabilityManager.INSTANCE.register(IHighness.class, new HighnessStorage(), CapabilityHighness::new);
     }
 
-    //Returns the players Regeneration capability
-    public static IRegeneration get(EntityPlayer player) {
+    public static IHighness get(EntityPlayer player) {
         if (player.hasCapability(CAPABILITY, null)) {
             return player.getCapability(CAPABILITY, null);
         }
-        throw new IllegalStateException("Missing Regeneration capability: " + player + ", please report this to the issue tracker");
+        throw new IllegalStateException("Missing Highness capability: " + player + ", this is a very bad thing.");
     }
 
     @Override
     public void update() {
 
-        if (isRegenerating()) {
-            startRegenerating();
+        //if (isRegenerating()) {
+            //startRegenerating();
             sync();
-        }
+    
     }
 
     @Override
-    public boolean isRegenerating() {
-        return isRegenerating;
+    public boolean isHigh() {
+        return isHigh;
     }
 
     @Override
-    public void setRegenerating(boolean regenerating) {
-        isRegenerating = regenerating;
+    public void setHigh(boolean high) {
+        isHigh = high;
     }
 
     @Override
     public boolean isCapable() {
-        return isCapable && getLivesLeft() > 0 && player.posY > 0;
+        return isCapable;
     }
 
     @Override
@@ -77,13 +77,13 @@ public class CapabilityRegeneration implements IRegeneration {
     }
 
     @Override
-    public int getTicksRegenerating() {
-        return regenTicks;
+    public int getTicksHigh() {
+        return highTicks;
     }
 
     @Override
-    public void setTicksRegenerating(int ticks) {
-        regenTicks = ticks;
+    public void setTicksHigh(int ticks) {
+        highTicks = ticks;
     }
 
     @Override
@@ -92,23 +92,13 @@ public class CapabilityRegeneration implements IRegeneration {
     }
 
     @Override
-    public int getLivesLeft() {
-        return livesLeft;
+    public int getTimesHigh() {
+        return timesHigh;
     }
 
     @Override
-    public void setLivesLeft(int left) {
-        livesLeft = left;
-    }
-
-    @Override
-    public int getTimesRegenerated() {
-        return timesRegenerated;
-    }
-
-    @Override
-    public void setTimesRegenerated(int times) {
-        timesRegenerated = times;
+    public void setTimesHigh(int times) {
+        timesHigh = times;
     }
 
     @Override
@@ -123,42 +113,36 @@ public class CapabilityRegeneration implements IRegeneration {
 
     @Override
     public void sync() {
-        NetworkHandler.INSTANCE.sendToAll(new MessageUpdateRegen(player, serializeNBT()));
-    }
-
-    @Override
-    public RegenType getType() {
-        return RegenType.valueOf(typeName);
+        NetworkHandler.INSTANCE.sendToAll(new MessageUpdateHigh(player, serializeNBT()));
     }
 
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setBoolean("isRegenerating", isRegenerating);
-        nbt.setInteger("timesRegenerated", timesRegenerated);
-        nbt.setInteger("livesLeft", livesLeft);
+        nbt.setBoolean("isHigh", isHigh);
+        nbt.setInteger("timesHigh", timesHigh);
         nbt.setBoolean("isCapable", isCapable);
-        nbt.setInteger("regenTicks", regenTicks);
+        nbt.setInteger("highTicks", highTicks);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
-        setRegenerating(nbt.getBoolean("isRegenerating"));
-        setTimesRegenerated(nbt.getInteger("timesRegenerated"));
-        setLivesLeft(nbt.getInteger("livesLeft"));
+        setHigh(nbt.getBoolean("isHigh"));
+        setTimesHigh(nbt.getInteger("timesHigh"));
         setCapable(nbt.getBoolean("isCapable"));
-        setTicksRegenerating(nbt.getInteger("regenTicks"));
+        setTicksHigh(nbt.getInteger("highTicks"));
     }
 
-    private void startRegenerating() {
-
-        setTicksRegenerating(getTicksRegenerating() + 1);
-
-        if (getTicksRegenerating() == 1) {
+    private void startHighness() {
+    	
+        setTicksHigh(getTicksHigh() + 1);
+        /*
+        if (getTicksHigh() == 1) {
             player.world.playSound(null, player.posX, player.posY, player.posZ, getType().getType().getSound(), SoundCategory.PLAYERS, 0.5F, 1.0F);
         }
-
+        
+        
         if (getTicksRegenerating() > 0 && getTicksRegenerating() < 100)
             getType().getType().onInitial(player);
 
@@ -175,7 +159,7 @@ public class CapabilityRegeneration implements IRegeneration {
             setRegenerating(false);
             setLivesLeft(getLivesLeft() - 1);
             setTimesRegenerated(getTimesRegenerated() + 1);
-        }
+        } */
     }
 
     public NBTTagCompound getDefaultStyle() {

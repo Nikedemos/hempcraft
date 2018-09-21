@@ -11,16 +11,16 @@ import javax.annotation.Nullable;
  * Created by Sub
  * on 16/09/2018.
  */
-public class RegenerationStorage implements Capability.IStorage<IRegeneration> {
+public class HighnessStorage implements Capability.IStorage<IHighness> {
 
     @Nullable
     @Override
-    public NBTBase writeNBT(Capability<IRegeneration> capability, IRegeneration instance, EnumFacing side) {
+    public NBTBase writeNBT(Capability<IHighness> capability, IHighness instance, EnumFacing side) {
         return instance.serializeNBT();
     }
 
     @Override
-    public void readNBT(Capability<IRegeneration> capability, IRegeneration instance, EnumFacing side, NBTBase nbt) {
+    public void readNBT(Capability<IHighness> capability, IHighness instance, EnumFacing side, NBTBase nbt) {
         instance.deserializeNBT(nbt instanceof NBTTagCompound ? (NBTTagCompound) nbt : new NBTTagCompound());
     }
 }

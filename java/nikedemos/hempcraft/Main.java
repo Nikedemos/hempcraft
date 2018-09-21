@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.RegistryManager;
-import nikedemos.hempcraft.capability.CapabilityRegeneration;
+import nikedemos.hempcraft.capability.CapabilityHighness;
 import nikedemos.hempcraft.handlers.BreedingHandler;
 import nikedemos.hempcraft.handlers.FollowingHandler;
 import nikedemos.hempcraft.handlers.HoeHandler;
@@ -63,7 +63,7 @@ public class Main {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
 		//thanks, Sub!
-		CapabilityRegeneration.init();
+		CapabilityHighness.init();
 	    
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		HempCraftConfig.load(config);

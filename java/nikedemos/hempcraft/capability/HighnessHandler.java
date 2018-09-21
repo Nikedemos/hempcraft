@@ -15,20 +15,20 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensio
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
-import static nikedemos.hempcraft.capability.CapabilityRegeneration.REGEN_ID;
+import static nikedemos.hempcraft.capability.CapabilityHighness.HIGHNESS_ID;
 
 /**
  * Created by Sub
  * on 16/09/2018.
  */
 @Mod.EventBusSubscriber(modid = Main.MODID)
-public class RegenerationHandler {
+public class HighnessHandler {
 
     @SubscribeEvent
     public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntityLiving() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-            IRegeneration handler = CapabilityRegeneration.get(player);
+            IHighness handler = CapabilityHighness.get(player);
             handler.update();
         }
     }
@@ -38,51 +38,51 @@ public class RegenerationHandler {
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         Entity entity = event.getObject();
         if (entity instanceof EntityPlayer) {
-            event.addCapability(REGEN_ID, new RegenerationProvider(new CapabilityRegeneration((EntityPlayer) event.getObject())));
+            event.addCapability(HIGHNESS_ID, new HighnessProvider(new CapabilityHighness((EntityPlayer) event.getObject())));
         }
     }
 
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
-        NBTTagCompound nbt = (NBTTagCompound) CapabilityRegeneration.CAPABILITY.getStorage().writeNBT(CapabilityRegeneration.CAPABILITY, event.getOriginal().getCapability(CapabilityRegeneration.CAPABILITY, null), null);
-        CapabilityRegeneration.CAPABILITY.getStorage().readNBT(CapabilityRegeneration.CAPABILITY, event.getEntityPlayer().getCapability(CapabilityRegeneration.CAPABILITY, null), null, nbt);
+        NBTTagCompound nbt = (NBTTagCompound) CapabilityHighness.CAPABILITY.getStorage().writeNBT(CapabilityHighness.CAPABILITY, event.getOriginal().getCapability(CapabilityHighness.CAPABILITY, null), null);
+        CapabilityHighness.CAPABILITY.getStorage().readNBT(CapabilityHighness.CAPABILITY, event.getEntityPlayer().getCapability(CapabilityHighness.CAPABILITY, null), null, nbt);
     }
 
     @SubscribeEvent
     public static void playerTracking(PlayerEvent.StartTracking event) {
-        if (event.getEntityPlayer().getCapability(CapabilityRegeneration.CAPABILITY, null) != null) {
-            event.getEntityPlayer().getCapability(CapabilityRegeneration.CAPABILITY, null).sync();
+        if (event.getEntityPlayer().getCapability(CapabilityHighness.CAPABILITY, null) != null) {
+            event.getEntityPlayer().getCapability(CapabilityHighness.CAPABILITY, null).sync();
         }
     }
-
+    /*
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerRespawnEvent event) {
-        CapabilityRegeneration.get(event.player).sync();
-    }
+        CapabilityHighness.get(event.player).sync();
+    } */ //nope - you die, you're no longer high. I mean... that's fair.
 
     @SubscribeEvent
     public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-        CapabilityRegeneration.get(event.player).sync();
+        CapabilityHighness.get(event.player).sync();
     }
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-        CapabilityRegeneration.get(event.player).sync();
+        CapabilityHighness.get(event.player).sync();
     }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    /*
+    @SubscribeEvent(priority = EventPriority.HIGH) //lol... HIGH. that's just a coinky-dinky tho
     public static void onHurt(LivingHurtEvent e) {
         if (!(e.getEntity() instanceof EntityPlayer))
             return;
 
         EntityPlayer player = (EntityPlayer) e.getEntity();
-        if (player.getHealth() + player.getAbsorptionAmount() - e.getAmount() > 0 || !e.getEntity().hasCapability(CapabilityRegeneration.CAPABILITY, null) || !e.getEntity().getCapability(CapabilityRegeneration.CAPABILITY, null).isCapable())
+        if (player.getHealth() + player.getAbsorptionAmount() - e.getAmount() > 0 || !e.getEntity().hasCapability(CapabilityHighness.CAPABILITY, null) || !e.getEntity().getCapability(CapabilityHighness.CAPABILITY, null).isCapable())
             return;
 
-        IRegeneration handler = CapabilityRegeneration.get(player);
+        IHighness handler = CapabilityHighness.get(player);
         e.setCanceled(true);
-        handler.setRegenerating(true);
-    }
+        handler.setHigh(true);
+    } */
 }
 
 

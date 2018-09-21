@@ -2,8 +2,8 @@ package nikedemos.hempcraft.handlers;
 
 import nikedemos.hempcraft.Main;
 import nikedemos.hempcraft.handlers.layers.LayerRegeneration;
-import nikedemos.hempcraft.capability.CapabilityRegeneration;
-import nikedemos.hempcraft.capability.IRegeneration;
+import nikedemos.hempcraft.capability.CapabilityHighness;
+import nikedemos.hempcraft.capability.IHighness;
 import nikedemos.hempcraft.capability.RObjects;
 import nikedemos.hempcraft.util.LimbManipulationUtil;
 import nikedemos.hempcraft.util.RenderUtil;
@@ -49,8 +49,8 @@ public class ClientHandler {
     @SubscribeEvent
     public static void onUpdate(LivingEvent.LivingUpdateEvent e) {
         if (e.getEntityLiving() instanceof EntityPlayer) {
-            IRegeneration regeneration = CapabilityRegeneration.get((EntityPlayer) e.getEntityLiving());
-            if (regeneration.isRegenerating()) {
+            IHighness regeneration = CapabilityHighness.get((EntityPlayer) e.getEntityLiving());
+            if (regeneration.isHigh()) {
                 Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
             }
         }
@@ -59,8 +59,8 @@ public class ClientHandler {
     @SubscribeEvent
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
 
-        IRegeneration handler = CapabilityRegeneration.get(e.getEntityPlayer());
-        if (handler != null && handler.isRegenerating()) {
+        IHighness handler = CapabilityHighness.get(e.getEntityPlayer());
+        if (handler != null && handler.isHigh()) {
 
             int arm_shake = e.getEntityPlayer().getRNG().nextInt(7);
 
@@ -74,12 +74,12 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void keyInput(InputUpdateEvent e) {
-        if (Minecraft.getMinecraft().player == null || !Minecraft.getMinecraft().player.hasCapability(CapabilityRegeneration.CAPABILITY, null) || !CapabilityRegeneration.get(Minecraft.getMinecraft().player).isCapable())
+        if (Minecraft.getMinecraft().player == null || !Minecraft.getMinecraft().player.hasCapability(CapabilityHighness.CAPABILITY, null) || !CapabilityHighness.get(Minecraft.getMinecraft().player).isCapable())
             return;
 
-        IRegeneration capability = CapabilityRegeneration.get(Minecraft.getMinecraft().player);
+        IHighness capability = CapabilityHighness.get(Minecraft.getMinecraft().player);
 
-        if (capability.isRegenerating() && capability.getType().getType().blockMovement()) {
+        if (capability.isHigh()) {
             MovementInput moveType = e.getMovementInput();
             moveType.rightKeyDown = false;
             moveType.leftKeyDown = false;

@@ -12,33 +12,33 @@ import javax.annotation.Nullable;
  * Created by Sub
  * on 16/09/2018.
  */
-public class RegenerationProvider implements ICapabilitySerializable<NBTTagCompound> {
+public class HighnessProvider implements ICapabilitySerializable<NBTTagCompound> {
 
-    private IRegeneration capability;
+    private IHighness capability;
 
-    public RegenerationProvider(IRegeneration capability) {
+    public HighnessProvider(IHighness capability) {
         this.capability = capability;
     }
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return CapabilityRegeneration.CAPABILITY != null && capability == CapabilityRegeneration.CAPABILITY;
+        return CapabilityHighness.CAPABILITY != null && capability == CapabilityHighness.CAPABILITY;
     }
 
     @Nullable
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityRegeneration.CAPABILITY ? CapabilityRegeneration.CAPABILITY.cast(this.capability) : null;
+        return capability == CapabilityHighness.CAPABILITY ? CapabilityHighness.CAPABILITY.cast(this.capability) : null;
     }
 
     @Override
     public NBTTagCompound serializeNBT() {
-        return (NBTTagCompound) CapabilityRegeneration.CAPABILITY.getStorage().writeNBT(CapabilityRegeneration.CAPABILITY, this.capability, null);
+        return (NBTTagCompound) CapabilityHighness.CAPABILITY.getStorage().writeNBT(CapabilityHighness.CAPABILITY, this.capability, null);
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
-        CapabilityRegeneration.CAPABILITY.getStorage().readNBT(CapabilityRegeneration.CAPABILITY, this.capability, null, nbt);
+        CapabilityHighness.CAPABILITY.getStorage().readNBT(CapabilityHighness.CAPABILITY, this.capability, null, nbt);
     }
 
 }

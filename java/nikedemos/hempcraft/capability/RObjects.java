@@ -1,7 +1,6 @@
 package nikedemos.hempcraft.capability;
 
 import nikedemos.hempcraft.Main;
-import nikedemos.hempcraft.items.ItemFobWatch;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -24,12 +23,6 @@ public class RObjects {
 
     //Items
     public static List<Item> ITEMS = new ArrayList<>();
-
-    @SubscribeEvent
-    public static void addItems(RegistryEvent.Register<Item> e) {
-        IForgeRegistry<Item> reg = e.getRegistry();
-        reg.registerAll(setUpItem(new ItemFobWatch(), "fob_watch"));
-    }
 
     private static Item setUpItem(Item item, String name) {
         item.setRegistryName(Main.MODID, name);
