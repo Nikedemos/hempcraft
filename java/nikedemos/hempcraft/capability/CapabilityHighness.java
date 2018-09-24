@@ -23,7 +23,53 @@ public class CapabilityHighness implements IHighness {
     public static final ResourceLocation HIGHNESS_ID = new ResourceLocation(Main.MODID, "highness");
     @CapabilityInject(IHighness.class)
     public static final Capability<IHighness> CAPABILITY = null;
-    private int timesHigh = 0, highTicks = 0;
+    public int timesHigh = 0; //only when the player is sober and tokes does this increase
+    public int highTicks = 0;
+    
+    public int unitsConsumed; //convert into absorbed
+    public int unitsAbsorbed; //convert into metabolised. this produces status effects related to getting high
+    public int unitsMetabolised; //dissipate over time/exercise/sleep - the more units, the slower the process
+    
+    public int smokeAcute; //how many units of smoke in the system now. dissipate over time in a linear fashion
+    public int smokeChronic; //dissipate over time - the more damage, the slower the process
+    public int smokeTolerance;//timesHigh increases this by a certain amount - to a point.
+    
+    //HOW DOES INTOXICATION AND SMOKING WORK?
+    /* - units absorbed The main variable that determines how "high" the Player is
+     *   Each tick update, a certain number of highness units is absorbed (converted into metabolites) during update, depending on highness itself.
+     * - units consumed - not-yet-absorbed units, a certain number is converted into absorbed, depending on highness and the buffer 
+     * - units metabolised - converted units over time, they add up. Passive stuff, determines the tolerance and probability of
+     *   developing dependence. Other factor in developing dependence is timesHigh.
+     *   Metabolites diminish over time. Physical exercise helps, as does sleeping.
+     * 
+     * Let's take an example:
+     * Standard Joint with the weakest possible "puff" - 16. That's the mean value. Check out BinomialRand for details.
+     * About 1/4th of it is "instant high", added directly to highness. The rest goes to highness_buffer, to be "released" over time.
+     * The more "toking" experience the player has, the more "instantaneous" the high is,
+     * but in future releases, it will also depend on the strain's THC to CBD ratio.
+     * CBD does not cause any effects, but it negates the negative ones
+     * caused by THC (which produces both positive and negative effects).
+     * 
+     * There is also one factor to consider: smoke itself.
+     * In short: the "weaker" the strain is, the more of it
+     * the player has to smoke to achieve the "same high".
+     * Smoke causes negative effects, both acute and chronic.
+     * 
+     * Smoke itself, over time, increases smoke tolerance. 
+     * 
+     * Some negative acute effects include:
+     * - Headache
+     * - Light aversion
+     * - Nausea (vanilla)
+     * 
+     * Some negative chronic effects include:
+     * - Morning cough
+     * - Shortness of breath
+     * - Fatigue
+     * 
+     * Joints have 16 puffs. And made from 1 Hemp Nugget.
+     * Thus, 1 Hemp Nugget with Strength 1 has 256 units, on average. Strength 2 has 512 units. Strength 3 Has 768 units, etc.
+     */
     
     private EntityPlayer player;
     private boolean isHigh = false, isCapable = true;
@@ -123,6 +169,23 @@ public class CapabilityHighness implements IHighness {
         nbt.setInteger("timesHigh", timesHigh);
         nbt.setBoolean("isCapable", isCapable);
         nbt.setInteger("highTicks", highTicks);
+        nbt.setInteger("unitsConsumed", unitsConsumed);
+        nbt.setInteger("unitsAbsorbed", unitsAbsorbed);
+        nbt.setInteger("unitsMetabolised", unitsMetabolised);
+        nbt.setInteger("smokeAcute", smokeAcute);
+        nbt.setInteger("smokeChronic", smokeChronic);
+        nbt.setInteger("smokeTolerance", smokeTolerance);
+        
+        
+/*
+ *     private int units_consumed; //convert into absorbed
+    private int units_absorbed; //convert into metabolised. this produces status effects related to getting high
+    private int units_metabolised; //dissipate over time/exercise/sleep - the more units, the slower the process
+    
+    private int smoke_acute; //how many units of smoke in the system now. dissipate over time in a linear fashion
+    private int smoke_chronic; //dissipate over time - the more damage, the slower the process
+    private int smoke_tolerance;
+ */	
         return nbt;
     }
 
@@ -132,6 +195,16 @@ public class CapabilityHighness implements IHighness {
         setTimesHigh(nbt.getInteger("timesHigh"));
         setCapable(nbt.getBoolean("isCapable"));
         setTicksHigh(nbt.getInteger("highTicks"));
+        
+        //no setters yet
+        unitsConsumed = nbt.getInteger("unitsConsumed");
+        unitsAbsorbed = nbt.getInteger("unitsAbsorbed");
+        unitsMetabolised = nbt.getInteger("unitsMetabolised");
+        
+        smokeAcute = nbt.getInteger("smokeAcute");
+        smokeChronic = nbt.getInteger("smokeChronic");
+        smokeTolerance = nbt.getInteger("smokeTolerance");
+        
     }
 
     private void startHighness() {

@@ -54,11 +54,12 @@ public class HighnessHandler {
             event.getEntityPlayer().getCapability(CapabilityHighness.CAPABILITY, null).sync();
         }
     }
-    /*
+    
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerRespawnEvent event) {
+        //CapabilityHighness.get(event.player).soberUp(); //TODO
         CapabilityHighness.get(event.player).sync();
-    } */ //nope - you die, you're no longer high. I mean... that's fair.
+    }
 
     @SubscribeEvent
     public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {

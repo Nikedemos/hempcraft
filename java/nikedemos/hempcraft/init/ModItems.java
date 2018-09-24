@@ -39,6 +39,9 @@ public final class ModItems {
 	public static final Item WATERING_CAN_GOLD = addItem(new ItemWateringCan(32, 1, 128),"watering_can_gold");
 	public static final Item WATERING_CAN_DIAMOND = addItem(new ItemWateringCan(256, 2, 1024),"watering_can_diamond");
 	
+	public static final Item SPLIFF = addItem(new ItemTokable(),"spliff");
+	
+	
 	private static Item addItem(Item item, String name) { 
 		return item.setRegistryName(Main.MODID, name).setUnlocalizedName(Main.MODID + "." + name);
 	}
@@ -57,6 +60,7 @@ public final class ModItems {
 		registry.register(WATERING_CAN_IRON);
 		registry.register(WATERING_CAN_GOLD);
 		registry.register(WATERING_CAN_DIAMOND);
+		registry.register(SPLIFF);
 		
 		registry.register(new ItemBlock(ModBlocks.HEMP_STALK).setRegistryName( ModBlocks.HEMP_STALK.getRegistryName()));
 		registry.register(new ItemBlock(ModBlocks.HEMP_PLOT).setRegistryName( ModBlocks.HEMP_PLOT.getRegistryName()));
